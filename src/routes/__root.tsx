@@ -11,6 +11,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Toaster } from "@/components/ui/sonner";
+import { useTheme, applyThemeClass } from "@/stores/theme";
+import { useAuth } from "@/stores/auth";
 
 function NotFoundComponent() {
   return (
@@ -115,11 +118,22 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const theme = useTheme((s) => s.theme);
+  const hydrate = useAuth((s) => s.hydrate);
+
+  useEffect(() => {
+    applyThemeClass(theme);
+  }, [theme]);
+
+  useEffect(() => {
+    void hydrate();
+  }, [hydrate]);
 
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
 }
