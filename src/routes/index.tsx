@@ -1,29 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Navigate } from "@tanstack/react-router";
+import { useAuth } from "@/stores/auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "Edu Awn — Share academic resources with your peers" },
+      { name: "description", content: "A student-built platform to share notes, slides and resources across devices, chat in private groups, and learn together." },
+      { property: "og:title", content: "Edu Awn" },
+      { property: "og:description", content: "Share academic resources, join private groups, and chat in real-time." },
     ],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+  const { session, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+  return <Navigate to={session ? "/dashboard" : "/auth"} replace />;
 }
