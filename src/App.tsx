@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { useAuth } from "@/stores/auth";
 import { useTheme, applyThemeClass } from "@/stores/theme";
@@ -26,9 +26,6 @@ export default function App() {
   useEffect(() => {
     void hydrate();
   }, [hydrate]);
-
-  // Bind navigate for stores/components that might want it later (kept simple here).
-  useNavigate();
 
   return (
     <>
