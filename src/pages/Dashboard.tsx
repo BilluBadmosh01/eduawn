@@ -1,15 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { FileCard, type FileRow } from "@/components/FileCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BookOpen, Smartphone, Users, MessageCircle, Sparkles, ShieldCheck, FileQuestion } from "lucide-react";
-
-export const Route = createFileRoute("/_app/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — Edu Awn" }] }),
-  component: Dashboard,
-});
 
 const features = [
   { title: "Academic File Sharing", desc: "Upload notes, slides, and study material in seconds.", icon: BookOpen },
@@ -20,7 +15,8 @@ const features = [
   { title: "Secure Reporting", desc: "Flag inappropriate content; admins keep the feed clean.", icon: ShieldCheck },
 ];
 
-function Dashboard() {
+export default function Dashboard() {
+  useEffect(() => { document.title = "Dashboard — Edu Awn"; }, []);
   const { data, isLoading } = useQuery({
     queryKey: ["files"],
     queryFn: async () => {

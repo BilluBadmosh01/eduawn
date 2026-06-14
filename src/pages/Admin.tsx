@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -7,16 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase, STORAGE_BUCKET } from "@/integrations/supabase/client";
 import { useAuth } from "@/stores/auth";
-import { useState } from "react";
 import { toast } from "sonner";
 import { ShieldX, Trash2, ShieldCheck, ShieldOff } from "lucide-react";
 
-export const Route = createFileRoute("/_app/admin")({
-  head: () => ({ meta: [{ title: "Admin — Edu Awn" }] }),
-  component: AdminPage,
-});
-
-function AdminPage() {
+export default function AdminPage() {
+  useEffect(() => { document.title = "Admin — Edu Awn"; }, []);
   const { isAdmin, loading } = useAuth();
   if (loading) return null;
   if (!isAdmin) {

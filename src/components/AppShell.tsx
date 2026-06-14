@@ -1,4 +1,5 @@
-import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import type { ReactNode } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -34,14 +35,14 @@ const items = [
 ];
 
 function AppSidebar() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { pathname } = useLocation();
   const { isAdmin, profile, signOut } = useAuth();
   const navigate = useNavigate();
 
   async function handleLogout() {
     await signOut();
     toast.success("Signed out");
-    navigate({ to: "/auth" });
+    navigate("/auth");
   }
 
   return (
@@ -97,7 +98,7 @@ function AppSidebar() {
   );
 }
 
-export function AppShell() {
+export function AppShell({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -114,7 +115,7 @@ export function AppShell() {
             </Button>
           </header>
           <main className="flex-1 min-w-0">
-            <Outlet />
+            {children}
           </main>
         </div>
       </div>

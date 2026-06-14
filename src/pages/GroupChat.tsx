@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,11 +7,6 @@ import { useAuth } from "@/stores/auth";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Send } from "lucide-react";
 import { toast } from "sonner";
-
-export const Route = createFileRoute("/_app/groups/$groupId")({
-  head: () => ({ meta: [{ title: "Group chat — Edu Awn" }] }),
-  component: GroupChat,
-});
 
 type Message = {
   id: string;
@@ -22,8 +17,9 @@ type Message = {
   created_at: string;
 };
 
-function GroupChat() {
-  const { groupId } = Route.useParams();
+export default function GroupChat() {
+  useEffect(() => { document.title = "Group chat — Edu Awn"; }, []);
+  const { groupId } = useParams<{ groupId: string }>();
   const { user, profile } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState("");
@@ -32,15 +28,16 @@ function GroupChat() {
 
   const { data: group } = useQuery({
     queryKey: ["group", groupId],
+    enabled: !!groupId,
     queryFn: async () => {
-      const { data, error } = await supabase.from("groups").select("*").eq("id", groupId).maybeSingle();
+      const { data, error } = await supabase.from("groups").select("*").eq("id", groupId!).maybeSingle();
       if (error) throw error;
       return data;
     },
   });
 
-  // Initial load + realtime subscription
   useEffect(() => {
+    if (!groupId) return;
     let active = true;
     supabase.from("messages").select("*").eq("group_id", groupId).order("created_at").then(({ data }) => {
       if (active) setMessages((data as Message[]) ?? []);
@@ -62,7 +59,7 @@ function GroupChat() {
 
   async function send(e: React.FormEvent) {
     e.preventDefault();
-    if (!text.trim() || !user || !profile) return;
+    if (!text.trim() || !user || !profile || !groupId) return;
     setSending(true);
     const { error } = await supabase.from("messages").insert({
       group_id: groupId,

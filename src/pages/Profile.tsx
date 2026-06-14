@@ -1,5 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,12 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_app/profile")({
-  head: () => ({ meta: [{ title: "Profile — Edu Awn" }] }),
-  component: Profile,
-});
-
-function Profile() {
+export default function Profile() {
+  useEffect(() => { document.title = "Profile — Edu Awn"; }, []);
   const { user, profile, isAdmin, refreshProfile } = useAuth();
   const [name, setName] = useState(profile?.username ?? "");
   const [busy, setBusy] = useState(false);

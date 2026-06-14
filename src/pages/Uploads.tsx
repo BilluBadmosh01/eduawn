@@ -1,5 +1,5 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,18 +10,14 @@ import { supabase, STORAGE_BUCKET } from "@/integrations/supabase/client";
 import { useAuth } from "@/stores/auth";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_app/uploads")({
-  head: () => ({ meta: [{ title: "Upload — Edu Awn" }] }),
-  component: Uploads,
-});
-
 const ALLOWED = ["jpg", "jpeg", "png", "ppt", "pptx", "doc", "docx", "pdf", "xls", "xlsx", "swb", "iwb", "notebook"];
 
 function extOf(name: string) {
   return name.split(".").pop()?.toLowerCase() ?? "";
 }
 
-function Uploads() {
+export default function Uploads() {
+  useEffect(() => { document.title = "Upload — Edu Awn"; }, []);
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
@@ -76,7 +72,7 @@ function Uploads() {
       return toast.error(insErr.message);
     }
     toast.success("Uploaded!");
-    navigate({ to: "/dashboard" });
+    navigate("/dashboard");
   }
 
   return (

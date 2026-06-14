@@ -1,5 +1,5 @@
-import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,13 +9,8 @@ import { useAuth } from "@/stores/auth";
 import { toast } from "sonner";
 import { GraduationCap, ShieldCheck, Users, BookOpen } from "lucide-react";
 
-export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — Edu Awn" }] }),
-  component: AuthPage,
-});
-
-function AuthPage() {
-  const { session, loading, signInAsUser, isAdmin } = useAuth();
+export default function AuthPage() {
+  const { session, loading, signInAsUser } = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [adminUsername, setAdminUsername] = useState("");
@@ -31,7 +26,7 @@ function AuthPage() {
     try {
       await signInAsUser(username.trim());
       toast.success(`Welcome, ${username.trim()}`);
-      navigate({ to: "/dashboard" });
+      navigate("/dashboard");
     } catch (err: any) {
       toast.error(err.message ?? "Sign in failed");
     } finally {
@@ -45,14 +40,13 @@ function AuthPage() {
     setBusy(true);
     try {
       await signInAsUser(adminUsername.trim());
-      // re-read state
       const fresh = useAuth.getState();
       if (!fresh.isAdmin) {
         await fresh.signOut();
         toast.error("This account isn't an admin. Bootstrap an admin via SQL first.");
       } else {
         toast.success("Admin signed in");
-        navigate({ to: "/admin" });
+        navigate("/admin");
       }
     } catch (err: any) {
       toast.error(err.message ?? "Sign in failed");

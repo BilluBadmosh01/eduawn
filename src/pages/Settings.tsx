@@ -1,4 +1,5 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -9,12 +10,8 @@ import { useAuth } from "@/stores/auth";
 import { toast } from "sonner";
 import { Moon, Sun, LogOut } from "lucide-react";
 
-export const Route = createFileRoute("/_app/settings")({
-  head: () => ({ meta: [{ title: "Settings — Edu Awn" }] }),
-  component: SettingsPage,
-});
-
-function SettingsPage() {
+export default function SettingsPage() {
+  useEffect(() => { document.title = "Settings — Edu Awn"; }, []);
   const { theme, toggle } = useTheme();
   const { notifications, setNotifications } = useSettings();
   const { profile, signOut, user } = useAuth();
@@ -23,7 +20,7 @@ function SettingsPage() {
   async function handleLogout() {
     await signOut();
     toast.success("Signed out");
-    navigate({ to: "/auth" });
+    navigate("/auth");
   }
 
   return (

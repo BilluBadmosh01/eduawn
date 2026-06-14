@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,11 +12,6 @@ import { useAuth } from "@/stores/auth";
 import { toast } from "sonner";
 import { Users, Plus, KeyRound, MessageSquare, Copy } from "lucide-react";
 
-export const Route = createFileRoute("/_app/groups/")({
-  head: () => ({ meta: [{ title: "Groups — Edu Awn" }] }),
-  component: GroupsList,
-});
-
 function randomCode() {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let s = "";
@@ -24,7 +19,8 @@ function randomCode() {
   return s;
 }
 
-function GroupsList() {
+export default function GroupsList() {
+  useEffect(() => { document.title = "Groups — Edu Awn"; }, []);
   const { user } = useAuth();
   const qc = useQueryClient();
   const [openCreate, setOpenCreate] = useState(false);
@@ -43,7 +39,6 @@ function GroupsList() {
         .eq("user_id", user!.id);
       if (error) throw error;
       const rows = (memberships ?? []) as any[];
-      // get member counts and last message per group
       const ids = rows.map((r) => r.group_id);
       let counts: Record<string, number> = {};
       let lastMsg: Record<string, string> = {};
@@ -165,7 +160,7 @@ function GroupsList() {
                   </Button>
                 </div>
                 <Button asChild className="w-full" size="sm">
-                  <Link to="/groups/$groupId" params={{ groupId: g.id }}>
+                  <Link to={`/groups/${g.id}`}>
                     <MessageSquare className="h-4 w-4 mr-1" /> Open chat
                   </Link>
                 </Button>

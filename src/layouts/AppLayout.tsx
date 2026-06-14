@@ -1,12 +1,8 @@
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/stores/auth";
 import { AppShell } from "@/components/AppShell";
 
-export const Route = createFileRoute("/_app")({
-  component: AppLayout,
-});
-
-function AppLayout() {
+export function AppLayout() {
   const { session, loading } = useAuth();
   if (loading) {
     return (
@@ -16,5 +12,9 @@ function AppLayout() {
     );
   }
   if (!session) return <Navigate to="/auth" replace />;
-  return <AppShell />;
+  return (
+    <AppShell>
+      <Outlet />
+    </AppShell>
+  );
 }
