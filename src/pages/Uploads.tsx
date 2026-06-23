@@ -10,7 +10,7 @@ import { supabase, STORAGE_BUCKET } from "@/integrations/supabase/client";
 import { useAuth } from "@/stores/auth";
 import { toast } from "sonner";
 
-const ALLOWED = ["jpg", "jpeg", "png", "ppt", "pptx", "doc", "docx", "pdf", "xls", "xlsx", "swb", "iwb", "notebook"];
+const ALLOWED = ["jpg", "jpeg", "png", "ppt", "pptx", "doc", "docx", "pdf", "xls", "xlsx", "swb", "iwb", "notebook", "enb"];
 
 function extOf(name: string) {
   return name.split(".").pop()?.toLowerCase() ?? "";
