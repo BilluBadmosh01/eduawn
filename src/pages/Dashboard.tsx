@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { FileCard, type FileRow } from "@/components/FileCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { BookOpen, Smartphone, Users, MessageCircle, Sparkles, ShieldCheck, FileQuestion } from "lucide-react";
 
 const features = [
@@ -30,14 +31,62 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-8">
+    <div className="p-4 sm:p-6 max-w-[1800px] mx-auto space-y-8">
       <section>
-        <div className="flex items-baseline justify-between mb-4">
+        <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Recent uploads</h1>
-          <span className="text-sm text-muted-foreground">{data?.length ?? 0} files</span>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <Card>
+    <CardContent className="p-4">
+      <p className="text-sm text-muted-foreground">Files</p>
+      <p className="text-2xl font-bold">{data?.length ?? 0}</p>
+    </CardContent>
+  </Card>
+
+  <Card>
+    <CardContent className="p-4">
+      <p className="text-sm text-muted-foreground">Smartboard Files</p>
+      <p className="text-2xl font-bold">
+        {data?.filter(f => f.file_type === "enb").length ?? 0}
+      </p>
+    </CardContent>
+  </Card>
+
+  <Card>
+    <CardContent className="p-4">
+      <p className="text-sm text-muted-foreground">PDF Files</p>
+      <p className="text-2xl font-bold">
+        {data?.filter(f => f.file_type === "pdf").length ?? 0}
+      </p>
+    </CardContent>
+  </Card>
+
+  <Card>
+    <CardContent className="p-4">
+      <p className="text-sm text-muted-foreground">Images</p>
+      <p className="text-2xl font-bold">
+        {data?.filter(f =>
+          ["jpg","jpeg","png","gif","webp"].includes(f.file_type)
+        ).length ?? 0}
+      </p>
+    </CardContent>
+  </Card>
+</div>
+        <div className="flex items-center gap-3">
+  <Button
+    variant="outline"
+    onClick={() => document.documentElement.requestFullscreen()}
+  >
+    Presentation Mode
+  </Button>
+
+  <span className="text-sm text-muted-foreground">
+    {data?.length ?? 0} files
+  </span>
+</div>
         </div>
         {isLoading ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="h-64 w-full" />
             ))}
@@ -51,7 +100,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
             {data.map((f) => <FileCard key={f.id} file={f} />)}
           </div>
         )}
