@@ -33,7 +33,7 @@ export default function Dashboard() {
   return (
     <div className="p-4 sm:p-6 max-w-[1800px] mx-auto space-y-8">
       <section>
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-baseline justify-between mb-4">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Recent uploads</h1>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
   <Card>
@@ -72,18 +72,9 @@ export default function Dashboard() {
     </CardContent>
   </Card>
 </div>
-        <div className="flex items-center gap-3">
-  <Button
-    variant="outline"
-    onClick={() => document.documentElement.requestFullscreen()}
-  >
-    Presentation Mode
-  </Button>
-
-  <span className="text-sm text-muted-foreground">
-    {data?.length ?? 0} files
-  </span>
-</div>
+      <span className="text-sm text-muted-foreground">
+  {data?.length ?? 0} files
+</span>
         </div>
         {isLoading ? (
          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
