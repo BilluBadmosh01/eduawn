@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase, STORAGE_BUCKET } from "@/integrations/supabase/client";
-import { Download, Flag, Eye, FileText, Image as ImageIcon, Trash2 } from "lucide-react";
+import { Download, Flag, Eye, FileText, Image as ImageIcon, Trash2, MonitorSmartphone } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/stores/auth";
 import { useQueryClient } from "@tanstack/react-query";
@@ -26,7 +26,9 @@ function isImage(t: string) {
 function isPdf(t: string) {
   return t.toLowerCase() === "pdf";
 }
-
+function isEnb(t: string) {
+  return t.toLowerCase() === "enb";
+}
 export function FileCard({ file }: { file: FileRow }) {
   const { user, isAdmin } = useAuth();
   const qc = useQueryClient();
@@ -112,11 +114,18 @@ export function FileCard({ file }: { file: FileRow }) {
         {isImage(file.file_type) && previewUrl ? (
           <img src={previewUrl} alt={file.file_name} className="w-full h-full object-cover" />
         ) : isPdf(file.file_type) ? (
-          <div className="flex flex-col items-center gap-2 text-muted-foreground">
-            <FileText className="h-12 w-12" />
-            <span className="text-xs uppercase font-medium">PDF</span>
-          </div>
-        ) : (
+  <div className="flex flex-col items-center gap-2 text-muted-foreground">
+    <FileText className="h-12 w-12" />
+    <span className="text-xs uppercase font-medium">PDF</span>
+  </div>
+) : isEnb(file.file_type) ? (
+  <div className="flex flex-col items-center gap-2 text-muted-foreground">
+    <MonitorSmartphone className="h-12 w-12" />
+    <span className="text-xs uppercase font-medium">
+      SMARTBOARD (.ENB)
+    </span>
+  </div>
+) : (
           <div className="flex flex-col items-center gap-2 text-muted-foreground">
             <ImageIcon className="h-12 w-12" />
             <span className="text-xs uppercase font-medium">{file.file_type}</span>
@@ -129,11 +138,17 @@ export function FileCard({ file }: { file: FileRow }) {
           <p className="text-xs text-muted-foreground">
             by @{file.uploader_username} · {date.toLocaleDateString()} {date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </p>
+          {isEnb(file.file_type) && (
+      <p className="text-xs text-blue-500 font-medium">
+      Specktron Smartboard File</p>
+      )}
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" variant="secondary" onClick={handlePreview}>
-            <Eye className="h-4 w-4 mr-1" /> Preview
-          </Button>
+         {!isEnb(file.file_type) && (
+  <Button size="sm" variant="secondary" onClick={handlePreview}>
+    <Eye className="h-4 w-4 mr-1" /> Preview
+  </Button>
+)}
           <Button size="sm" onClick={handleDownload}>
             <Download className="h-4 w-4 mr-1" /> Download
           </Button>
@@ -184,4 +199,5 @@ export function FileCard({ file }: { file: FileRow }) {
       </Dialog>
     </Card>
   );
-        }
+    }
+            
