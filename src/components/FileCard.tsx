@@ -28,7 +28,7 @@ function isPdf(t: string) {
 }
 function isEnb(t: string) {
   return t.toLowerCase() === "enb";
-
+}
 export function FileCard({ file }: { file: FileRow }) {
   const { user, isAdmin } = useAuth();
   const qc = useQueryClient();
