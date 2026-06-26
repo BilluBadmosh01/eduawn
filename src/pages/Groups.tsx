@@ -58,6 +58,13 @@ export default function GroupsList() {
     if (!groupName.trim() || !user) return;
     setBusy(true);
     const code = randomCode();
+    console.log("Store user.id:", user.id);
+
+const {
+  data: { user: authUser },
+} = await supabase.auth.getUser();
+
+console.log("Supabase auth user:", authUser?.id);
     const { data, error } = await supabase.from("groups").insert({
       group_name: groupName.trim(), private_code: code, creator_id: user.id,
     }).select().single();
