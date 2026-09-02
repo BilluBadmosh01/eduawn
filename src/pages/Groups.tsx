@@ -55,27 +55,55 @@ export default function GroupsList() {
   });
 
   async function createGroup() {
-    if (!groupName.trim() || !user) return;
-    setBusy(true);
-    const code = randomCode();
-    console.log("Store user.id:", user.id);
+  if (!groupName.trim() || !user) return;
 
-const {
-  data: { user: authUser },
-} = await supabase.auth.getUser();
+  setBusy(true);
 
-console.log("Supabase auth user:", authUser?.id);
-    const { data, error } = await supabase.from("groups").insert({
-      group_name: groupName.trim(), private_code: code, creator_id: user.id,
-    }).select().single();
-    if (error) { setBusy(false); return toast.error(error.message); }
-    await supabase.from("group_members").insert({ user_id: user.id, group_id: data.id });
+  const code = randomCode();
+
+  console.log("Store user.id:", user.id);
+
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
+
+  console.log("Supabase auth user:", authUser?.id);
+
+  if (!authUser) {
     setBusy(false);
-    setOpenCreate(false);
-    setGroupName("");
-    toast.success(`Group created. Code: ${code}`);
-    qc.invalidateQueries({ queryKey: ["my-groups"] });
+    return toast.error("Authentication session not found");
   }
+
+  const { data, error } = await supabase
+    .from("groups")
+    .insert({
+      group_name: groupName.trim(),
+      private_code: code,
+      creator_id: authUser.id,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    setBusy(false);
+    return toast.error(error.message);
+  }
+
+  await supabase
+    .from("group_members")
+    .insert({
+      user_id: authUser.id,
+      group_id: data.id,
+    });
+
+  setBusy(false);
+  setOpenCreate(false);
+  setGroupName("");
+
+  toast.success(`Group created. Code: ${code}`);
+
+  qc.invalidateQueries({ queryKey: ["my-groups"] });
+}
 
   async function joinGroup() {
     const code = joinCode.trim().toUpperCase();
