@@ -74,6 +74,8 @@ export default function GroupsList() {
     return toast.error("Authentication session not found");
   }
 
+console.log("FINAL creater_id_being inserted:", authUser.id);
+    
   const { data, error } = await supabase
     .from("groups")
     .insert({
