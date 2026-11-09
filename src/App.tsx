@@ -14,6 +14,7 @@ import AdminPage from "@/pages/Admin";
 import GroupsList from "@/pages/Groups";
 import GroupChat from "@/pages/GroupChat";
 import NotFound from "@/pages/NotFound";
+import Gilly from "@/pages/Gilly";
 
 export default function App() {
   const theme = useTheme((s) => s.theme);
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/" element={<IndexPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route element={<AppLayout />}>
+          <Route path="/gilly" element={<Gilly />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/uploads" element={<Uploads />} />
           <Route path="/profile" element={<Profile />} />
