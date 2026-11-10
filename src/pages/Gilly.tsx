@@ -33,8 +33,14 @@ export default function Gilly() {
         ]);
       })
       .catch(() => {
-        if (active) {
-          setStatus("Identity verification failed. Please try again later.");
+        console.error("Gilly identity error:",error);
+
+        if(active) {
+        setStatus(
+          error instanceof Error 
+          ? error.message
+          : "Identity verification failed."
+          );
         }
       });
 
