@@ -1,7 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 
 const GILLY_IDENTITY_URL =
-  "https://blair-cord-actor-observed.trycloudflare.com/webhook/gilly-identity";
+  "https://nascar-affairs-income-sic.trycloudflare.com/webhook/gilly-identity";
 
 export async function identifyGillyStudent(): Promise<string> {
   // Get the current Supabase session
