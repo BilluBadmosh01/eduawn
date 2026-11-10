@@ -29,7 +29,10 @@ export async function identifyGillyStudent(): Promise<string> {
   });
 
   if (!response.ok) {
-    throw new Error("Gilly could not verify your identity.");
+    const errorText = await reponse.text();
+    throw new Error(
+      'Identity gateway error: ${response.status} - ${errotText}'
+    );
   }
 
   const result: { student_id?: string } = await response.json();
